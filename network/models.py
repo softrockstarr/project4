@@ -7,10 +7,10 @@ class User(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author")
     content = models.TextField(max_length=500)
-    date = models.DateTimeField(auto_now_add=False)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Post {self.id} created by {self.user} on {self.date.strftime('%-I:%-M:%S, %d %b, %Y')}"
+        return f"Post {self.id} created by {self.user} on {self.date.strftime('%-I:%M:%S, %d %b, %Y')}"
 
 class Follower(models.Model):
     user_following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_following")

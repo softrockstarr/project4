@@ -1,5 +1,15 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <h1>All Posts</h2>
+    {% if user.is_authenticated %}
+        <h2>New Post</h2>
+        <form action="{% url 'new_post' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                {{ form }}
+            </div>
+            <button type="submit">Post</button>
+        </form> 
+    {% endif %}
 {% endblock %}
