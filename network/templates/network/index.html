@@ -3,7 +3,7 @@
 {% block body %}
     <h1>All Posts</h2>
     {% if user.is_authenticated %}
-        <h2>New Post</h2>
+        <h2>Create New Post</h2>
         <form action="{% url 'new_post' %}" method="POST">
             {% csrf_token %}
             <div class="form-group mb-3">
@@ -12,4 +12,22 @@
             <button type="submit" class="btn btn-primary">Post</button>
         </form> 
     {% endif %}
+    <div class="container-fluid">
+        {% for post in posts %}
+            <div class="row m-2 border flex-column">
+                <div class="my-1">
+                    <h3>{{ post.user }}</h3>
+                </div>
+                <div class="my-1">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="my-1">
+                    <span>{{ post.date }}</span>
+                </div>
+                <div class="my-1">
+                    <span>Likes:</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

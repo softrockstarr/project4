@@ -8,7 +8,12 @@ from .models import *
 from .forms import *
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all().order_by('-date')
+    # likes = Like.objects.
+    return render(request, "network/index.html", {
+        "posts": posts,
+
+    })
 
 def new_post(request):
     if request.method == "POST":

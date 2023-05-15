@@ -8,7 +8,7 @@ class NewPostForm(ModelForm):
         fields = ["content"]
         labels = {'content': ""}
         widgets = {
-        "content": forms.Textarea(attrs={'class':'form-control',  "placeholder":"What's on your mind?",})
+        "content": forms.Textarea(attrs={'class':'form-control',  "placeholder":"What's on your mind?", "rows":3})
         }
 
 # class NewPostForm(forms.Form):
