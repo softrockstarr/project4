@@ -6,6 +6,10 @@ class NewPostForm(ModelForm):
     class Meta:
         model = Post
         fields = ["content"]
+        labels = {'content': ""}
+        widgets = {
+        "content": forms.Textarea(attrs={'class':'form-control',  "placeholder":"What's on your mind?",})
+        }
 
 # class NewPostForm(forms.Form):
 #     content = forms.CharField(label="Content", widget=forms.Textarea(attrs={
