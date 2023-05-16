@@ -1,5 +1,5 @@
 from django import forms
-from .models import *
+from .models import Post
 from django.forms import ModelForm
 
 class NewPostForm(ModelForm):
@@ -10,11 +10,3 @@ class NewPostForm(ModelForm):
         widgets = {
         "content": forms.Textarea(attrs={'class':'form-control',  "placeholder":"What's on your mind?", "rows":3})
         }
-
-# class NewPostForm(forms.Form):
-#     content = forms.CharField(label="Content", widget=forms.Textarea(attrs={
-#                                     'placeholder': "What's on your mind?",
-#                                     'aria-label': "content",
-#                                     'rows': 10,
-#                                     "class": "form-control"
-#                                     }))

@@ -4,18 +4,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import *
-from .forms import *
+from .models import Post, Follower, Like, User
+from .forms import NewPostForm
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
-    # likes = Like.objects.
-    return render(request, "network/index.html", {
-        "posts": posts,
-
-    })
-
-def new_post(request):
+    message = "Thanks for sharing!"
+    # function to display new post form and save to db
     if request.method == "POST":
         form = NewPostForm(request.POST)
         if form.is_valid():
@@ -27,13 +22,14 @@ def new_post(request):
                 content=content
             )
             post.save()
-            return HttpResponseRedirect(reverse('new_post'))
+            return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, "network/index.html",{
                 "form": form
             })      
     return render(request, "network/index.html", {
         "form": NewPostForm(),
+        "posts": posts
     })
 
 def login_view(request):
