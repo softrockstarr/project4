@@ -9,7 +9,6 @@ from .forms import NewPostForm
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
-    message = "Thanks for sharing!"
     # function to display new post form and save to db
     if request.method == "POST":
         form = NewPostForm(request.POST)
@@ -29,7 +28,7 @@ def index(request):
             })      
     return render(request, "network/index.html", {
         "form": NewPostForm(),
-        "posts": posts
+        "posts": posts,
     })
 
 def login_view(request):
@@ -82,3 +81,16 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+    
+def display_profile(request, id):
+    user = User.objects.get(pk=id)
+    posts = Post.objects.filter(user=user).order_by('-date')
+    followers = Follower.objects.filter(user_followed=user)
+    following = Follower.objects.filter(user_following=user)
+    return render(request, "network/profile.html", {
+        "user": user,
+        "posts": posts,
+        "following": following,
+        "followers": followers
+    })
+

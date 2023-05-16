@@ -1,23 +1,17 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h1>All Posts</h1>
-    {% if user.is_authenticated %}
-        <h2>Create New Post</h2>
-        <form action="{% url 'index' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group mb-3">
-                {{ form }}
-            </div>
-            <button type="submit" class="btn btn-primary">Post</button>
-        </form>
-    {% endif %}
+    <div class="container-fluid ml-2">
+        <h1>{{ user }}'s Profile</h1>
+        <span>Followers: {{ followers.count }}</span><br>
+        <span>Following: {{ following.count}}</span>
+        <button class="btn btn-primary">Follow</button>
+        <button class="btn btn-primary">Unfollow</button>
+        <h2>{{ user }}'s Posts:</h2>
+    </div>
     <div class="container-fluid">
         {% for post in posts %}
             <div class="row m-2 border flex-column">
-                <div class="my-1">
-                    <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3>
-                </div>
                 <div class="my-1">
                     <p>{{ post.content }}</p>
                 </div>

@@ -10,3 +10,4 @@ class NewPostForm(ModelForm):
         widgets = {
         "content": forms.Textarea(attrs={'class':'form-control',  "placeholder":"What's on your mind?", "rows":3})
         }
+
