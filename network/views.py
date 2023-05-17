@@ -105,20 +105,6 @@ def display_profile(request, id):
         "current_user": request.user.id
     })
 
-# class Follower(models.Model):
-#     user_following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_following")
-#     user_followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followed")
-
-#     def __str__(self):
-#         return f"{self.user_following} is following {self.user_followed}"
-    
-# class Follow(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_who_is_following")
-#     user_follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_who_is_being_followed")
-
-#     def __str__(self):
-#         return f"{self.user_following} is following {self.user_followed}"
-
 def follow(request):
     user_follow = request.POST['userfollow']
     current_user = User.objects.get(pk=request.user.id)
