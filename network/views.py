@@ -112,7 +112,9 @@ def follow(request):
     follow = Follower(user_following=current_user, user_followed=user_follow_data)
     follow.save()
     user_id = user_follow_data.id
-    return HttpResponseRedirect(reverse(display_profile), kwargs={'user_id': user_id})
+    current_user_id = current_user.id
+    print(current_user_id)
+    return HttpResponseRedirect(reverse(display_profile, kwargs={'id': user_id}))
 
 
 def unfollow(request):
@@ -122,5 +124,5 @@ def unfollow(request):
     follow = Follower.objects.get(user_following=current_user, user_followed=user_follow_data)
     follow.delete()
     user_id = user_follow_data.id
-    return HttpResponseRedirect(reverse(display_profile), kwargs={'user_id': user_id})
+    return HttpResponseRedirect(reverse(display_profile, kwargs={'id': user_id}))
 

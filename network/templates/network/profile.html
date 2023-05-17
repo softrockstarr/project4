@@ -6,17 +6,17 @@
         <span>Followers: {{ followers.count }}</span><br>
         <span>Following: {{ following.count}}</span><br>
         {% if user.is_authenticated %}
-            {% if user.id != current_user%}
+            {% if user.id != current_user.id %}
                 {% if is_following %}
                 <form action="{% url 'unfollow' %}" method="POST">
                     {% csrf_token %}
-                    <input type ="hidden" name="userfollow" value="{{ user.id }}">
+                    <input type ="hidden" name="userfollow" value="{{ user }}">
                     <button class="btn btn-primary">Unfollow</button>
                 </form>    
                 {% else %}
                 <form action="{% url 'follow' %}" method="POST">
                     {% csrf_token %}
-                    <input type ="hidden" name="userfollow" value="{{ user.id }}">
+                    <input type ="hidden" name="userfollow" value="{{ user }}">
                     <button class="btn btn-primary">Follow</button>
                 </form>              
                 {% endif %}
