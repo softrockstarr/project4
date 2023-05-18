@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container-fluid">
+        {% for post in allPosts %}
+            <div class="row m-2 border flex-column">
+                <div class="my-1">
+                    {% comment %} <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3> {% endcomment %}
+                    <h3><a href="#">{{ post.user }}</a></h3>
+                </div>
+                <div class="my-1">
+                    <p>{{ follower_posts.content }}</p>
+                </div>
+                <div class="my-1">
+                    <span>{{ follower_posts.date }}</span>
+                </div>
+                <div class="my-1">
+                    <span>Likes:</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}

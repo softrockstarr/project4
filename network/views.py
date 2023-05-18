@@ -3,12 +3,18 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import Post, Follower, Like, User
 from .forms import NewPostForm
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
+    # pagination
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     # function to display new post form and save to db
     if request.method == "POST":
         form = NewPostForm(request.POST)
@@ -29,6 +35,7 @@ def index(request):
     return render(request, "network/index.html", {
         "form": NewPostForm(),
         "posts": posts,
+        "page_obj": page_obj
     })
 
 def login_view(request):
@@ -90,13 +97,18 @@ def display_profile(request, id):
     following = Follower.objects.filter(user_following=user)
     is_follower = followers.filter(user_following=request.user)
     user_is_following = len(is_follower) > 0
+    # pagination
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/profile.html", {
         "user": user,
         "posts": posts,
         "following": following,
         "followers": followers,
         "is_following": user_is_following,
-        "current_user": request.user.id
+        "current_user": request.user.id,
+        "page_obj": page_obj
     })
 
 
@@ -125,3 +137,17 @@ def unfollow(request):
     user_id = user_follow_data.id
     return HttpResponseRedirect(reverse(display_profile, kwargs={'id': user_id}))
 
+# def following(request):
+#     currentUser = User.objects.get(pk=request.user.id)
+#     followingPeople = Follower.objects.filter(user_following=currentUser)
+#     allPosts = Post.objects.all().order_by('-date')
+#     followingPosts = []
+
+#     for post in allPosts:
+#         for person in followingPeople:
+#             if person.user_followed == post.user:
+#                 followingPosts.append(post) 
+
+#     return render(request, "network/following.html", {
+#         "posts": allPosts,
+#     })
