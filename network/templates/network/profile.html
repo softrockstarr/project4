@@ -4,9 +4,24 @@
     <div class="container-fluid ml-2">
         <h1>{{ user }}'s Profile</h1>
         <span>Followers: {{ followers.count }}</span><br>
-        <span>Following: {{ following.count}}</span>
-        <button class="btn btn-primary">Follow</button>
-        <button class="btn btn-primary">Unfollow</button>
+        <span>Following: {{ following.count}}</span><br>
+        {% if user.is_authenticated %}
+            {% if user.id != request.user.id %}
+                {% if is_following == True %}
+                <form action="{% url 'unfollow' %}" method="POST">
+                    {% csrf_token %}
+                    <input type ="hidden" name="userfollow" value="{{ user }}">
+                    <button class="btn btn-primary">Unfollow</button>
+                </form>    
+                {% else %}
+                <form action="{% url 'follow' %}" method="POST">
+                    {% csrf_token %}
+                    <input type ="hidden" name="userfollow" value="{{ user }}">
+                    <button class="btn btn-primary">Follow</button>
+                </form>              
+                {% endif %}
+            {% endif %}
+        {% endif %}
         <h2>{{ user }}'s Posts:</h2>
     </div>
     <div class="container-fluid">
