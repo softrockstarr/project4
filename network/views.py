@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator
+import json 
 
 from .models import Post, Follower, Like, User
 from .forms import NewPostForm
@@ -137,17 +138,30 @@ def unfollow(request):
     user_id = user_follow_data.id
     return HttpResponseRedirect(reverse(display_profile, kwargs={'id': user_id}))
 
-# def following(request):
-#     currentUser = User.objects.get(pk=request.user.id)
-#     followingPeople = Follower.objects.filter(user_following=currentUser)
-#     allPosts = Post.objects.all().order_by('-date')
-#     followingPosts = []
+def following(request):
+    current_user = User.objects.get(pk=request.user.id)
+    following = Follower.objects.filter(user_following=current_user)
+    all_posts = Post.objects.all().order_by('-date')
+    following_posts = []
 
-#     for post in allPosts:
-#         for person in followingPeople:
-#             if person.user_followed == post.user:
-#                 followingPosts.append(post) 
+    for post in all_posts:
+        for person in following:
+            if person.user_followed == post.user:
+                following_posts.append(post) 
 
-#     return render(request, "network/following.html", {
-#         "posts": allPosts,
-#     })
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/following.html", {
+        "posts": all_posts,
+        "page_obj": page_obj
+    })
+
+def edit_post(request, post_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        post = Post.objects.get(pk=post_id)
+        post.content = data["content"]
+        post.save()
+        return JsonResponse({"message": "edit successful", "data": data["content"]})

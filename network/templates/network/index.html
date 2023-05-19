@@ -1,6 +1,41 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+    <script>
+        function getCookie(name){
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if(parts.length == 2)
+                return parts.pop().split(';').shift()
+        }
+
+        function saveEdit(id){
+            const textareaContent = document.getElementById(`textarea_${id}`).value
+            const content = document.getElementById(`content_${id}`)
+            const editModal = document.getElementById(`edit_modal_${id}`)
+            fetch(`/edit/${id}`, {
+                method: "POST",
+                headers: { "Content-type": "application/json", "X-CSRFToken": getCookie("csrftoken")},
+                body: JSON.stringify({
+                    content: textareaContent
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                content.innerHTML = result.data
+            
+                editModal.classList.remove('show');
+                editModal.setAttribute('aria-hidden', 'true');
+                editModal.setAttribute('style', 'display: none');
+            
+                const modalsBackdrops = document.getElementsByClassName('modal-backdrop');
+  
+                for(let i=0; i < modalsBackdrops.length; i++) {
+                    document.body.removeChild(modalsBackdrops[i]);
+                }
+            })
+        }
+    </script>
     <h1>All Posts</h1>
     {% if user.is_authenticated %}
         <h2>Create New Post</h2>
@@ -19,13 +54,40 @@
                     <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3>
                 </div>
                 <div class="my-1">
-                    <p>{{ post.content }}</p>
+                    <p id="content_{{ post.id }}">{{ post.content }}</p>
                 </div>
                 <div class="my-1">
                     <span>{{ post.date }}</span>
                 </div>
                 <div class="my-1">
                     <span>Likes:</span>
+                </div>
+                {% comment %} modal popup for editing posts {% endcomment %}
+                <div class="my-1">
+                    {% if user.is_authenticated %}
+                        {% if user == post.user %}
+                        <button class="btn btn-primary" type="button" data-target="#edit_modal_{{ post.id }}" data-toggle="modal">Edit</button>
+                        <div class="modal" id="edit_modal_{{ post.id }}" tabindex="-1" aria-labelledby="edit_modal_{{ post.id }}" aria-hidden="true" role="dialog">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Edit Post</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <textarea rows=5 id="textarea_{{ post.id }}" class="form-control" name="content">{{ post.content }}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" onclick="saveEdit({{ post.id }})" >Save</button>
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

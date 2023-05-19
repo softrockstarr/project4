@@ -2,23 +2,44 @@
 
 {% block body %}
     <div class="container-fluid">
-        {% for post in allPosts %}
+        <h1>Following</h1>
+        {% for post in page_obj %}
             <div class="row m-2 border flex-column">
                 <div class="my-1">
-                    {% comment %} <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3> {% endcomment %}
-                    <h3><a href="#">{{ post.user }}</a></h3>
+                    <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3>
                 </div>
                 <div class="my-1">
-                    <p>{{ follower_posts.content }}</p>
+                    <p>{{ post.content }}</p>
                 </div>
                 <div class="my-1">
-                    <span>{{ follower_posts.date }}</span>
+                    <span>{{ post.date }}</span>
                 </div>
                 <div class="my-1">
                     <span>Likes:</span>
                 </div>
             </div>
         {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    {% if page_obj.previous_page_number == 1 %}
+                        <li class="page-item"><a class="page-link" href="?page=1">Previous</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+                {% endif %}
+                {% if page_obj.has_next %}
+                    {% if page_obj.next_page_number == page_obj.paginator.num_pages %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Next</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </nav>
     </div>
     
 {% endblock %}
