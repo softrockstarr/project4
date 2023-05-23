@@ -36,7 +36,7 @@
                     <span>{{ post.date }}</span>
                 </div>
                 <div class="my-1">
-                    <span>Likes: </span><span id="likeCount_{{ post.id }}">{{ post.post_like.count }}</span>
+                    <span>&#10084; </span><span id="likeCount_{{ post.id }}">{{ post.post_like.count }}</span>
                 </div>
                 <div class="my-1">
                 {% if post.id in liked_posts %}
