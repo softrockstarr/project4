@@ -1,8 +1,10 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+<div class="container-fluid">
     <h1>All Posts</h1>
     {% if user.is_authenticated %}
+    <div class="row m-2 flex-column pl-2">
         <h2>Create New Post</h2>
         <form action="{% url 'index' %}" method="POST">
             {% csrf_token %}
@@ -12,9 +14,9 @@
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     {% endif %}
-    <div class="container-fluid">
+    </div>
         {% for post in page_obj %}
-            <div class="row m-2 border flex-column">
+            <div class="row m-2 border flex-column pl-2">
                 <div class="my-1">
                     <h3><a href="{% url 'display_profile' post.user.id %}">{{ post.user }}</a></h3>
                 </div>
@@ -31,7 +33,7 @@
                 <div class="my-1">
                     {% if user.is_authenticated %}
                         {% if user == post.user %}
-                        <button class="btn btn-primary" type="button" data-target="#edit_modal_{{ post.id }}" data-toggle="modal">Edit</button>
+                        <button class="btn btn-primary ml-1" type="button" data-target="#edit_modal_{{ post.id }}" data-toggle="modal">Edit</button>
                         <div class="modal" id="edit_modal_{{ post.id }}" tabindex="-1" aria-labelledby="edit_modal_{{ post.id }}" aria-hidden="true" role="dialog">
                             <div class="modal-dialog" role="document">
                               <div class="modal-content">
@@ -54,16 +56,16 @@
                           {% comment %} Like/Unlike buttons {% endcomment %}
                         {% else %}
                             {% if post.id in liked_posts %}
-                                <button class="btn btn-info fa fa-thumbs-down" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                                <button class="btn btn-info fa fa-thumbs-down ml-1" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
                             {% else %}
-                                <button class="btn btn-info fa fa-thumbs-up" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                                <button class="btn btn-info fa fa-thumbs-up ml-1" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
                             {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
             </div>
         {% endfor %}
-    </div>
+    
 
     <div class="pagination">
         <nav aria-label="Page navigation example">
@@ -85,6 +87,6 @@
             </ul>
         </nav>
     </div>
-    
+</div>  
     
 {% endblock %}

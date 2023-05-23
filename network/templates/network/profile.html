@@ -1,7 +1,8 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div class="container-fluid ml-2">
+    <div class="container-fluid">
+        <div class="row m-2 border flex-column pl-2">
         <h1>{{ user }}'s Profile</h1>
         <span>Followers: {{ followers.count }}</span><br>
         <span>Following: {{ following.count}}</span><br>
@@ -22,11 +23,12 @@
                 {% endif %}
             {% endif %}
         {% endif %}
+            </div>
         <h2>{{ user }}'s Posts:</h2>
     </div>
     <div class="container-fluid">
         {% for post in page_obj %}
-            <div class="row m-2 border flex-column">
+            <div class="row m-2 border flex-column pl-2">
                 <div class="my-1">
                     <p>{{ post.content }}</p>
                 </div>
@@ -38,14 +40,13 @@
                 </div>
                 <div class="my-1">
                 {% if post.id in liked_posts %}
-                                <button class="btn btn-info fa fa-thumbs-down" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
-                            {% else %}
-                                <button class="btn btn-info fa fa-thumbs-up" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
-                            {% endif %}
+                    <button class="btn btn-info fa fa-thumbs-down ml-1" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                {% else %}
+                    <button class="btn btn-info fa fa-thumbs-up ml-1" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                {% endif %}
                 </div>
             </div>
         {% endfor %}
-    </div>
     <div class="pagination">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
@@ -66,5 +67,5 @@
             </ul>
         </nav>
     </div>
-    
+</div>
 {% endblock %}
