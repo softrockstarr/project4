@@ -115,6 +115,18 @@ def display_profile(request, id):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    # modify likes          
+    likes = Like.objects.all()
+    liked_posts = []
+
+    try: 
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []     
+        
     return render(request, "network/profile.html", {
         "user": user,
         "posts": posts,
@@ -122,7 +134,9 @@ def display_profile(request, id):
         "followers": followers,
         "is_following": user_is_following,
         "current_user": request.user.id,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "liked_posts": liked_posts,
+        "likes": likes
     })
 
 
@@ -166,9 +180,22 @@ def following(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # modify likes          
+    likes = Like.objects.all()
+    liked_posts = []
+
+    try: 
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []     
+
     return render(request, "network/following.html", {
         "posts": all_posts,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "liked_posts": liked_posts,
+        "likes": likes
     })
 
 def edit_post(request, post_id):
