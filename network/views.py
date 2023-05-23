@@ -48,7 +48,8 @@ def index(request):
         "form": NewPostForm(),
         "posts": posts,
         "page_obj": page_obj,
-        "liked_posts": liked_posts
+        "liked_posts": liked_posts,
+        "likes": likes
     })
 
 def login_view(request):
