@@ -35,6 +35,34 @@
                 }
             })
         }
+
+        function likePost(id, liked_posts){
+            const button = document.getElementById(`${id}`);
+            const isLiked = button.classList.contains('fa-thumbs-down');
+              
+            if (isLiked) {
+                fetch(`/unlike/${id}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        button.classList.remove('fa-thumbs-down');
+                        button.classList.add('fa-thumbs-up');
+                        // Remove post ID from liked_posts array
+                        const index = liked_posts.indexOf(id);
+                        if (index > -1) {
+                                liked_posts.splice(index, 1);
+                        }
+                    });
+            } else {
+                fetch(`/like/${id}`)
+                    .then(response => response.json())
+                    .then(result => {
+                        button.classList.remove('fa-thumbs-up');
+                        button.classList.add('fa-thumbs-down');
+                            // Add post ID to liked_posts array
+                        liked_posts.push(id);
+                    });
+            }      
+        }
     </script>
     <h1>All Posts</h1>
     {% if user.is_authenticated %}
@@ -60,7 +88,7 @@
                     <span>{{ post.date }}</span>
                 </div>
                 <div class="my-1">
-                    <span>Likes:</span>
+                    <span>Likes: </span>
                 </div>
                 {% comment %} modal popup for editing posts {% endcomment %}
                 <div class="my-1">
@@ -86,6 +114,15 @@
                               </div>
                             </div>
                           </div>
+                          {% comment %} Like/Unlike buttons {% endcomment %}
+                        {% else %}
+                            {% if post.id in liked_posts %}
+                                {% comment %} <button class="btn btn-outline-primary" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"><i class="fa-regular fa-thumbs-down"></i></button> {% endcomment %}
+                                <button class="btn btn-info fa fa-thumbs-down" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                            {% else %}
+                                {% comment %} <button class="btn btn-outline-primary" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"><i class="fa-regular fa-thumbs-up"></i></button> {% endcomment %}
+                                <button class="btn btn-info fa fa-thumbs-up" id="{{ post.id }}" onclick="likePost({{ post.id }}, {{ liked_posts }})"></button>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>

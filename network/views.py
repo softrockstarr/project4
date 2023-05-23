@@ -32,11 +32,23 @@ def index(request):
         else:
             return render(request, "network/index.html",{
                 "form": form
-            })      
+            })
+    # modify likes          
+    likes = Like.objects.all()
+    liked_posts = []
+
+    try: 
+        for like in likes:
+            if like.user.id == request.user.id:
+                liked_posts.append(like.post.id)
+    except:
+        liked_posts = []     
+
     return render(request, "network/index.html", {
         "form": NewPostForm(),
         "posts": posts,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "liked_posts": liked_posts
     })
 
 def login_view(request):
@@ -165,3 +177,20 @@ def edit_post(request, post_id):
         post.content = data["content"]
         post.save()
         return JsonResponse({"message": "edit successful", "data": data["content"]})
+    
+def like(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    like = Like(user=user, post=post)
+    like.save()
+    return JsonResponse({"message": "post liked"})
+
+def unlike(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=request.user.id)
+    like = Like.objects.filter(user=user, post=post)
+    like.delete()
+    return JsonResponse({"message": "post unliked"})
+
+
+
